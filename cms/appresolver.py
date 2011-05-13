@@ -177,7 +177,7 @@ def get_app_patterns():
         hooked_applications = []
     
     # Loop over all titles with an application hooked to them
-    for title in title_qs.filter(application_urls__gt="").select_related():
+    for title in title_qs.filter(application_urls__isnull=False).select_related():
         if settings.CMS_FLAT_URLS:
             if title.language in home_slugs:
                 path = title.slug.split(home_slugs[title.language] + "/", 1)[-1]
@@ -207,6 +207,8 @@ def get_app_patterns():
             hooked_applications[title.language] += get_patterns_for_title(path, title)
         else:
             hooked_applications += get_patterns_for_title(path, title)
+            if title.language in home_slugs:
+                hooked_applications += get_patterns_for_title(home_slugs[title.language] + "/" + path, title)
         included.append(mixid)
     # Build the app patterns to be included in the cms urlconfs
     app_patterns = []
