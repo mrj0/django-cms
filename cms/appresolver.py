@@ -207,6 +207,8 @@ def get_app_patterns():
             hooked_applications[title.language] += get_patterns_for_title(path, title)
         else:
             hooked_applications += get_patterns_for_title(path, title)
+            if title.language in home_slugs:
+                hooked_applications += get_patterns_for_title(home_slugs[title.language] + "/" + path, title)
         included.append(mixid)
     # Build the app patterns to be included in the cms urlconfs
     app_patterns = []
